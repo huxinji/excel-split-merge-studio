@@ -1,0 +1,31 @@
+{
+  "template_version": 1,
+  "operation": "merge",
+  "structure": {
+    "header_mode": "row_number",
+    "header_row": 1,
+    "header_end_row": 1,
+    "data_start_row": 2,
+    "skip_bottom_rows": 0
+  },
+  "rules": {
+    "mode": "key_join",
+    "strategy": "align",
+    "target_sheet": "",
+    "join_type": "left",
+    "left_keys": "Branch",
+    "right_keys": "BranchCode",
+    "duplicate_policy": "reject",
+    "field_mapping": "",
+    "trim": true,
+    "drop_duplicates": false,
+    "empty_match": false
+  },
+  "output": {
+    "naming_template": "{original_name}_{sheet_name}",
+    "add_source_file": true,
+    "add_source_sheet": true,
+    "overwrite": false
+  }
+}
+

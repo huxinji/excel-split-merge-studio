@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "excel-split-merge-studio"
+version = "3.0.0"
+description = "Commercial bilingual desktop application for splitting, merging, joining, and reconciling Excel and CSV data"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "PySide6>=6.8,<7",
+  "openpyxl>=3.1,<4",
+  "pandas>=2.2,<4",
+  "pydantic>=2.10,<3",
+  "XlsxWriter>=3.2,<4",
+]
+
+[project.optional-dependencies]
+legacy = ["xlrd>=2.0,<3", "pyxlsb>=1.0,<2"]
+dev = [
+  "pytest>=8.3,<10",
+  "pytest-qt>=4.4,<5",
+  "ruff>=0.9,<1",
+  "mypy>=1.14,<2",
+  "pyinstaller>=6.11,<7",
+]
+
+[project.scripts]
+excel-studio = "excel_studio.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/excel_studio/ui/merge_page.py" = ["SIM102"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["excel_studio"]
+strict = true
+warn_unused_ignores = true

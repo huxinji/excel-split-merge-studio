@@ -1,0 +1,108 @@
+name: Build and Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  APP_VERSION: "3.0.0"
+  QT_QPA_PLATFORM: offscreen
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev,legacy]"
+      - name: Run test suite
+        run: python -m pytest -q
+      - name: Build portable Python source
+        run: python scripts/build_single_file.py
+      - name: Build Windows executable
+        run: python -m PyInstaller --noconfirm --clean excel-studio-release.spec
+      - name: Verify packaged feature contract
+        run: python scripts/verify_packaged_app.py dist/ExcelSplitMergeStudio.exe
+      - name: Stage Windows release
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path release -Force | Out-Null
+          Copy-Item dist\ExcelSplitMergeStudio.exe "release\ExcelSplitMergeStudio-$env:APP_VERSION-Windows.exe"
+          Copy-Item Excel_Split_Merge_Studio.py release\Excel_Split_Merge_Studio.py
+          Compress-Archive -LiteralPath dist\ExcelSplitMergeStudio.exe,README.md `
+            -DestinationPath "release\ExcelSplitMergeStudio-$env:APP_VERSION-Windows-Portable.zip" `
+            -CompressionLevel Optimal -Force
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe")) {
+            choco install innosetup --no-progress -y
+          }
+      - name: Build Windows installer
+        shell: pwsh
+        run: >-
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          installer\windows\ExcelSplitMergeStudio.iss
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-release
+          path: release/*
+          if-no-files-found: error
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev,legacy]"
+      - name: Run test suite
+        run: python -m pytest -q
+      - name: Build macOS application
+        run: python -m PyInstaller --noconfirm --clean excel-studio-release.spec
+      - name: Verify packaged feature contract
+        run: >-
+          python scripts/verify_packaged_app.py
+          dist/ExcelSplitMergeStudio.app/Contents/MacOS/ExcelSplitMergeStudio
+      - name: Create DMG
+        run: |
+          mkdir -p release
+          hdiutil create \
+            -volname "Excel Split & Merge Studio" \
+            -srcfolder dist/ExcelSplitMergeStudio.app \
+            -ov -format UDZO \
+            "release/ExcelSplitMergeStudio-${APP_VERSION}-macOS.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-release
+          path: release/*
+          if-no-files-found: error
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [windows, macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "*-release"
+          path: release-assets
+          merge-multiple: true
+      - name: Create checksums
+        working-directory: release-assets
+        run: sha256sum * > SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: release-assets/*

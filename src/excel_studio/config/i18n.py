@@ -1,0 +1,81 @@
+from __future__ import annotations
+
+from excel_studio.config._i18n_catalog import EN_US, ZH_CN, TranslationManager
+
+ZH_CN.update(
+    {
+        "common.confirm": "确定",
+        "common.cancel": "取消",
+        "validation.hierarchy_fields": "请选择 2 至 3 个层级字段。",
+        "validation.hierarchy_unique": "各级层级字段不能重复。",
+        "validation.hierarchy_filter": "请至少选择第 {level} 级“{field}”的一个范围值。",
+        "split.mode.hierarchy": "层级筛选拆分",
+        "split.hierarchy.primary_title": "按管理层级筛选并拆分（最多 3 级）",
+        "split.hierarchy.level_count": "本次使用层级",
+        "split.hierarchy.levels.two": "2 级：多选上级，按第 2 级拆分",
+        "split.hierarchy.levels.three": "3 级：多选前两级，按第 3 级拆分",
+        "split.hierarchy.level_field": "第 {level} 级字段",
+        "split.hierarchy.filter_value": "范围值",
+        "split.hierarchy.output_action": "输出动作",
+        "split.hierarchy.split_here": "按此级字段值生成输出",
+        "split.hierarchy.value_placeholder": "从完整数据中选择一个或多个值",
+        "split.hierarchy.hint": "示例：大区同时选择华东、华南，第二级字段选择片区，即保留两个大区并按各自片区拆分。选择 3 级时，前两级都可多选，再按网点拆分。范围值从完整数据后台读取。",
+        "split.hierarchy.summary.pending": "请为每个上级层级至少选择一个范围值；程序将读取完整数据并估算输出数量。",
+        "split.hierarchy.summary.fields": "请选择 2 至 3 个不重复的层级字段。",
+        "split.hierarchy.summary.loading": "正在后台读取完整数据中的层级范围值…",
+        "split.hierarchy.summary.empty": "当前层级筛选没有匹配数据，请检查范围值。",
+        "split.hierarchy.summary.ready": "完整数据匹配 {rows} 行；将生成 {groups} 个层级输出。",
+        "split.hierarchy.summary.truncated": "选择器仅展示前 500 个值，仍可手工添加其他精确值。",
+        "split.hierarchy.summary.failed": "层级范围值读取失败：{error}",
+        "split.hierarchy.multiselect.title": "选择层级范围值",
+        "split.hierarchy.multiselect.hint": "可以搜索并勾选多个范围值；“全选当前结果”只作用于当前搜索结果。",
+        "split.hierarchy.multiselect.search": "搜索范围值",
+        "split.hierarchy.multiselect.select_visible": "全选当前结果",
+        "split.hierarchy.multiselect.clear": "清空选择",
+        "split.hierarchy.multiselect.custom": "手工输入列表中未显示的精确值",
+        "split.hierarchy.multiselect.add": "添加并选中",
+        "split.hierarchy.multiselect.none": "尚未选择",
+        "split.hierarchy.multiselect.summary": "已选 {count} 项：{values}…",
+        "split.hierarchy.multiselect.choose": "多选…",
+    }
+)
+
+EN_US.update(
+    {
+        "common.confirm": "OK",
+        "common.cancel": "Cancel",
+        "validation.hierarchy_fields": "Select two or three hierarchy fields.",
+        "validation.hierarchy_unique": "Each hierarchy level must use a different field.",
+        "validation.hierarchy_filter": "Select at least one scope value for level {level}, “{field}”.",
+        "split.mode.hierarchy": "Hierarchy",
+        "split.hierarchy.primary_title": "Filter and split by management hierarchy (up to 3 levels)",
+        "split.hierarchy.level_count": "Hierarchy depth",
+        "split.hierarchy.levels.two": "2 levels: select parent values, split by level 2",
+        "split.hierarchy.levels.three": "3 levels: select two parent scopes, split by level 3",
+        "split.hierarchy.level_field": "Level {level} field",
+        "split.hierarchy.filter_value": "Scope values",
+        "split.hierarchy.output_action": "Output action",
+        "split.hierarchy.split_here": "Create outputs by this level",
+        "split.hierarchy.value_placeholder": "Select one or more values from the full dataset",
+        "split.hierarchy.hint": "Example: select both East and South as Area values, then choose District as level 2 to retain both areas and split by their districts. With three levels, both parent scopes support multiple selections before splitting by Branch.",
+        "split.hierarchy.summary.pending": "Select at least one value for every parent level. The full dataset will be read to estimate outputs.",
+        "split.hierarchy.summary.fields": "Select two or three different hierarchy fields.",
+        "split.hierarchy.summary.loading": "Reading hierarchy values from the full dataset in the background…",
+        "split.hierarchy.summary.empty": "No rows match the current hierarchy filters. Check the scope values.",
+        "split.hierarchy.summary.ready": "{rows} full-data rows match; {groups} hierarchy outputs will be created.",
+        "split.hierarchy.summary.truncated": "Only the first 500 values are listed; other exact values can be added manually.",
+        "split.hierarchy.summary.failed": "Could not read hierarchy values: {error}",
+        "split.hierarchy.multiselect.title": "Select hierarchy scope values",
+        "split.hierarchy.multiselect.hint": "Search and check multiple values. Select Visible applies only to the current search results.",
+        "split.hierarchy.multiselect.search": "Search scope values",
+        "split.hierarchy.multiselect.select_visible": "Select Visible",
+        "split.hierarchy.multiselect.clear": "Clear Selection",
+        "split.hierarchy.multiselect.custom": "Enter an exact value that is not listed",
+        "split.hierarchy.multiselect.add": "Add and Select",
+        "split.hierarchy.multiselect.none": "Nothing selected",
+        "split.hierarchy.multiselect.summary": "{count} selected: {values}…",
+        "split.hierarchy.multiselect.choose": "Select…",
+    }
+)
+
+__all__ = ["EN_US", "ZH_CN", "TranslationManager"]

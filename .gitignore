@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+.build-venv/
+build/
+dist/
+release/
+.coverage
+htmlcov/
+.runtime/
+output/
+*.patch-backup
+*.responsive-backup
+*.theme-backup
+*.fix-backup
+.patch_probe.txt
+
+# Keep the maintained release specification under version control.
+*.spec
+!excel-studio-release.spec
