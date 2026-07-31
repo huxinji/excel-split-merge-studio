@@ -12,19 +12,6 @@ key-based joins, same-name worksheet consolidation, and grouped aggregation.
 
 ![层级多选拆分界面](docs/screenshots/hierarchy-split-workspace.png)
 
-## 下载 / Downloads
-
-GitHub Release 工作流会在对应原生系统生成以下文件：
-
-- `ExcelSplitMergeStudio-3.0.0-Windows.exe` — Windows 10/11 免安装可执行文件；
-- `ExcelSplitMergeStudio-3.0.0-Windows-Setup.exe` — Windows 安装程序；
-- `ExcelSplitMergeStudio-3.0.0-macOS.dmg` — macOS 磁盘映像；
-- `Excel_Split_Merge_Studio.py` — 内置完整项目源码的单文件 Python 启动器；
-- `SHA256SUMS.txt` — 发布文件校验值。
-
-The release workflow builds native Windows and macOS artifacts on their matching GitHub runners.
-The project never disguises a renamed archive as an EXE or DMG.
-
 ## 核心功能 / Core Features
 
 ### 拆分 / Split
@@ -75,11 +62,10 @@ See [层级筛选拆分说明 / Hierarchy Split Guide](docs/HIERARCHY_SPLIT.md).
 - side-by-side concatenation with source prefixes and configurable gaps;
 - grouped aggregation, deduplication, source tracking, task reports, and reconciliation.
 
-## 商业级交互 / Product UX
+## 交互 / UX
 
 - 顶部“拆分工作簿 / 合并工作簿”切换；
 - 中英语言实时切换；
-- 高对比度浅色 Liquid Glass 风格；
 - 左侧步骤卡片、右侧数据预览与日志、固定底部操作栏；
 - 初始窗口按屏幕可用区域约 86% × 84% 居中打开，不默认最大化；
 - 左侧内容可滚动，适配 1366×768、1920×1080 与系统 DPI 缩放；
@@ -87,66 +73,11 @@ See [层级筛选拆分说明 / Hierarchy Split Guide](docs/HIERARCHY_SPLIT.md).
 - 支持暂停、继续、取消、进度显示和打开输出目录。
 
 - live Split/Merge workspace and Chinese/English switching;
-- high-contrast light Liquid Glass-inspired visual system;
 - step cards on the left, preview and logs on the right, and a fixed action footer;
 - centered responsive startup geometry without forced maximization;
 - scrollable content for smaller displays and system DPI scaling;
 - background scanning, hierarchy-value discovery, preview, and workbook processing;
 - pause, resume, cancel, progress, and output-folder access.
-
-## 直接运行 Python 版本 / Run from Python
-
-需要 Python 3.11 或更新版本：
-
-```powershell
-python -m pip install -r requirements.txt
-python Excel_Split_Merge_Studio.py
-```
-
-开发模式：
-
-```powershell
-python -m pip install -e ".[dev,legacy]"
-python -m excel_studio
-```
-
-The single-file launcher contains a verified compressed copy of the maintained `excel_studio`
-package and extracts it to a versioned local cache before starting.
-
-## 操作流程 / Basic Workflow
-
-### 按字段值拆分
-
-1. 打开软件后保持默认“按字段值拆分”。
-2. 选择源工作簿并确认字段名所在行。
-3. 从“选择拆分字段”中选定真实字段。
-4. 确认 Sheet 范围、空值策略、输出目录和命名规则。
-5. 点击“开始拆分”，确认摘要后等待完成。
-
-### 层级筛选拆分
-
-1. 第 1 步选择源文件。
-2. 第 2 步切换到“层级筛选拆分”。
-3. 选择 2 级或 3 级。
-4. 在每个上级字段中点击“多选”，搜索并勾选一个或多个范围值。
-5. 将最深一级设置为拆分目标，并查看完整数据匹配行数与预计输出数量。
-6. 设置输出目录并开始拆分。
-
-同一级内的多个范围值采用“或”关系，不同层级之间采用“且”关系。例如，大区选择
-“华东、华南”，片区选择“上海、广东”，表示：
-`大区 ∈ {华东, 华南} AND 片区 ∈ {上海, 广东}`。
-
-For a two-level task, select one or more parent values, then choose the level-2 target field.
-For a three-level task, multi-select both parent scopes and use level 3 as the split target.
-Selections are OR-ed within a level and AND-ed across levels.
-
-### 合并
-
-1. 切换到“合并工作簿”。
-2. 添加文件或文件夹，并确认表头行和 Sheet 范围。
-3. 选择合并模式并配置对应规则。
-4. 设置输出名称、格式和同名文件策略。
-5. 点击“开始合并”，完成后查看输出与任务报告。
 
 ## 项目结构 / Project Layout
 
@@ -165,46 +96,6 @@ excel-split-merge-studio/
 └─ .github/workflows/
 ```
 
-## 测试 / Tests
-
-```powershell
-$env:QT_QPA_PLATFORM = "offscreen"
-python -m pytest -q
-python -m ruff check src tests scripts
-python -m mypy --config-file mypy-final.ini src/excel_studio
-```
-
-当前自动化测试覆盖原有拆分/合并逻辑、两级与三级层级多选、级联完整数据范围值读取、
-同名子级隔离、筛选排除行核对、中英文切换、响应式窗口和固定底栏。
-
-Tests cover existing split and merge behavior, two- and three-level hierarchy multi-selection,
-cascading full-data value discovery, duplicate child-name isolation, excluded-row reconciliation,
-bilingual UI, responsive layout, and the fixed action footer.
-
-## 构建 / Packaging
-
-Windows：
-
-```powershell
-python scripts/build_single_file.py
-python -m PyInstaller --noconfirm --clean excel-studio-release.spec
-python scripts/verify_packaged_app.py dist/ExcelSplitMergeStudio.exe
-```
-
-macOS：
-
-```bash
-python -m PyInstaller --noconfirm --clean excel-studio-release.spec
-python scripts/verify_packaged_app.py \
-  dist/ExcelSplitMergeStudio.app/Contents/MacOS/ExcelSplitMergeStudio
-hdiutil create -volname "Excel Split & Merge Studio" \
-  -srcfolder dist/ExcelSplitMergeStudio.app -ov -format UDZO \
-  release/ExcelSplitMergeStudio-3.0.0-macOS.dmg
-```
-
-推送 `v*` 标签后，`.github/workflows/release.yml` 会在 Windows 与 macOS 原生运行器构建、
-验证并上传所有文件到 GitHub Release。
-
 ## 数据安全与限制 / Data Safety & Limitations
 
 - 源文件仅作为输入读取；默认策略不会覆盖源文件或已有输出。
@@ -212,13 +103,9 @@ hdiutil create -volname "Excel Split & Merge Studio" \
 - 多选父级时使用完整层级路径命名并分组，防止同名子级跨父级合并。
 - 复杂图表、图片、外部链接、条件格式和 VBA 跨工作簿复制采用尽力保留。
 - 公式不会由 Python 像桌面 Excel 一样完整重算。
-- 未签名的 Windows/macOS 构建可能触发系统安全提示。
 
 - source workbooks are read-only inputs and existing outputs are auto-numbered by default;
 - hierarchy scope values use normalized exact matching, not fuzzy classification;
 - full path grouping keeps same-named children under different selected parents separate;
 - complex workbook objects are preserved on a best-effort basis;
 - Python does not fully recalculate formulas like desktop Excel;
-- unsigned builds may trigger operating-system security warnings.
-
-安全问题请参阅 [SECURITY.md](SECURITY.md)。版本变更请参阅 [CHANGELOG.md](CHANGELOG.md)。
