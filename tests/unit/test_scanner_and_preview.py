@@ -48,8 +48,11 @@ class ScannerAndPreviewTests(unittest.TestCase):
         nested_book.write_bytes(self.workbook_path.read_bytes())
         shallow = collect_input_files([self.root], ScanOptions())
         deep = collect_input_files([self.root], ScanOptions(scan_subfolders=True))
-        self.assertEqual(shallow, [self.workbook_path])
-        self.assertEqual(deep, [nested_book, self.workbook_path])
+        self.assertEqual(shallow, [self.workbook_path.resolve()])
+        self.assertEqual(
+            deep,
+            [nested_book.resolve(), self.workbook_path.resolve()],
+        )
 
     def test_preview_honors_explicit_header_row(self) -> None:
         result = preview_workbook(
